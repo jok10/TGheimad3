@@ -46,11 +46,9 @@ window.onload = function init() {
 
 function createCirclePoints(cent, rad, k) {
   points = [];
-  // center of the fan
   points.push(cent);
 
   const dAngle = 2 * Math.PI / k;
-  // go k..0 so last rim vertex == first rim vertex
   for (let i = k; i >= 0; i--) {
     const a = i * dAngle;
     const p = vec2(rad * Math.sin(a) + cent[0],
@@ -62,10 +60,10 @@ function createCirclePoints(cent, rad, k) {
 function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  const msec = Date.now() - iniTime;     // waveTriangle expects ms
+  const msec = Date.now() - iniTime;    
   gl.uniform1f(locTime, msec);
 
   gl.drawArrays(gl.TRIANGLE_FAN, 0, points.length);
 
-  requestAnimFrame(render); // or window.requestAnimationFrame(render)
+  requestAnimFrame(render); 
 }
