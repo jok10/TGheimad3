@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://hjalmtyr.github.io/forrit25/Angel/rainingPoints.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Rignandi punktar</title>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+uniform float time;
+attribute vec4 vPosition;
+varying vec4 tpos;
+
+void main()
+{
+	gl_PointSize = 3.0;
+    tpos = vPosition;
+
+    tpos.y = 1.0 - mod(0.001*time + tpos.y+1.0, 2.0);
+
+    gl_Position = tpos;
+    
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 tpos;
+
+void main()
+{
+    if (tpos.x <= -1.0/3.0 ){
+        gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+        }
+    else if (tpos.x > -1.0/3.0 && tpos.x <= 1.0/3.0 ){ 
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+    else if (tpos.x > 1.0/3.0 ){ 
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }
+}
+</script>
+
+<script type="text/javascript" src="./Rignandi punktar_files/webgl-utils.js.download"></script>
+<script type="text/javascript" src="./Rignandi punktar_files/initShaders.js.download"></script>
+<script type="text/javascript" src="./Rignandi punktar_files/MV.js.download"></script>
+<script type="text/javascript" src="./Rignandi punktar_files/rainingPoints.js.download"></script>
+</head>
+
+<body>
+<canvas id="gl-canvas" width="750" height="540">
+
+
+</canvas></body></html>

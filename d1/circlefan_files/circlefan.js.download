@@ -1,0 +1,71 @@
+/////////////////////////////////////////////////////////////////
+//  Sýnidæmi í Tölvugrafík
+//  Teikna nálgun á hring sem TRIANGLE_FAN + wave hreyfing
+/////////////////////////////////////////////////////////////////
+let canvas, gl;
+let program, locTime, locColor, iniTime;
+
+let numCirclePoints = 20;  // points ON the circle
+let radius = 0.5;
+let center = vec2(0, 0);
+let points = [];
+
+window.onload = function init() {
+  canvas = document.getElementById("gl-canvas");
+
+  gl = WebGLUtils.setupWebGL(canvas);
+  if (!gl) { alert("WebGL isn't available"); return; }
+
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
+
+  // shaders
+  program = initShaders(gl, "vertex-shader", "fragment-shader");
+  gl.useProgram(program);
+
+  // uniforms (after useProgram)
+  locTime  = gl.getUniformLocation(program, "time");
+  locColor = gl.getUniformLocation(program, "rcolor");
+  gl.uniform4fv(locColor, flatten(vec4(1.0, 0.0, 0.0, 1.0)));
+  iniTime = Date.now();
+
+  // geometry
+  createCirclePoints(center, radius, numCirclePoints);
+
+  // buffer
+  const vBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW);
+
+  const vPosition = gl.getAttribLocation(program, "vPosition");
+  gl.vertexAttribPointer(vPosition, 2, gl.FLOAT, false, 0, 0);
+  gl.enableVertexAttribArray(vPosition);
+
+  render();
+};
+
+function createCirclePoints(cent, rad, k) {
+  points = [];
+  // center of the fan
+  points.push(cent);
+
+  const dAngle = 2 * Math.PI / k;
+  // go k..0 so last rim vertex == first rim vertex
+  for (let i = k; i >= 0; i--) {
+    const a = i * dAngle;
+    const p = vec2(rad * Math.sin(a) + cent[0],
+                   rad * Math.cos(a) + cent[1]);
+    points.push(p);
+  }
+}
+
+function render() {
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  const msec = Date.now() - iniTime;     // waveTriangle expects ms
+  gl.uniform1f(locTime, msec);
+
+  gl.drawArrays(gl.TRIANGLE_FAN, 0, points.length);
+
+  requestAnimFrame(render); // or window.requestAnimationFrame(render)
+}

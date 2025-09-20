@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://hjalmtyr.github.io/forrit25/Angel/rainingPoints.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Rignandi punktar</title>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+uniform float time;
+attribute vec4 vPosition;
+varying vec4 tpos;
+
+void main()
+{
+	gl_PointSize = 3.0;
+    tpos = vPosition;
+
+    tpos.y = 1.0 - mod(0.001*time + tpos.y+1.0, 2.0);
+
+    gl_Position = tpos;
+    
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+const float ytriKross_y_top = 0.30;
+const float ytriKross_y_bot = -0.30;
+const float ytriKross_x_left = -0.50;
+const float ytriKross_x_right = 0.0;
+varying vec4 tpos;
+
+void main()
+{
+    
+    if (tpos.y < ytriKross_y_top/2.0 && tpos.y > ytriKross_y_bot/2.0 || tpos.x > ytriKross_x_left+0.15 && tpos.x < (ytriKross_x_right -0.15)){
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        } 
+    else if ((tpos.y < ytriKross_y_top && tpos.y > ytriKross_y_bot) || (tpos.x > ytriKross_x_left && tpos.x < ytriKross_x_right)){
+        gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+        }
+    else {
+        gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
+    }
+}
+</script>
+
+<script type="text/javascript" src="./Rignandi punktar_files/webgl-utils.js.download"></script>
+<script type="text/javascript" src="./Rignandi punktar_files/initShaders.js.download"></script>
+<script type="text/javascript" src="./Rignandi punktar_files/MV.js.download"></script>
+<script type="text/javascript" src="./Rignandi punktar_files/rainingPoints.js.download"></script>
+</head>
+
+<body>
+<canvas id="gl-canvas" width="750" height="540">
+
+
+</canvas></body></html>
